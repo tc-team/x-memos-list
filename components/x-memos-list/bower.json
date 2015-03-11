@@ -1,0 +1,28 @@
+{
+  "name": "x-memos-list",
+  "version": "0.0.0",
+  "authors": [
+    "TC"
+  ],
+  "description": "Element providing solution generate list of memos",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "memos-list"
+  ],
+  "main": "x-memos-list.html",
+  "license": "MIT",
+  "homepage": "https://github.com/tc-team/x-memos-list/",
+  "ignore": [
+    "/.*",
+    "/tests/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.4",
+    "x-memo-item": "git@github.com:tc-team/x-memo-item.git#~0.0.1"
+  },
+  "devDependencies": {
+    "web-component-tester": "*"
+  }
+}

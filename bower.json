@@ -1,0 +1,7 @@
+{
+  "name": "x-memos-list#gh-pages",
+  "private": true,
+  "dependencies": {
+    "x-memos-list": "tc-team/x-memos-list#master"
+  }
+}

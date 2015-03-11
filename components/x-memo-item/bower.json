@@ -1,0 +1,32 @@
+{
+  "name": "x-memo-item",
+  "version": "0.0.0",
+  "authors": [
+    "TC"
+  ],
+  "description": "Element providing solution for recording audio",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "memo-recorder"
+  ],
+  "main": "x-memo-item.html",
+  "license": "MIT",
+  "homepage": "https://github.com/tc-team/x-memo-item/",
+  "ignore": [
+    "/.*",
+    "/tests/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.4",
+    "paper-input": "Polymer/paper-input#~0.5.5",
+    "x-audio": "git@github.com:tc-team/x-audio.git#~0.0.2",
+    "core-ajax": "Polymer/core-ajax#~0.5.5",
+    "paper-item": "Polymer/paper-item#~0.5.5",
+    "core-dropdown": "Polymer/core-dropdown#~0.5.5"
+  },
+  "devDependencies": {
+    "web-component-tester": "*"
+  }
+}

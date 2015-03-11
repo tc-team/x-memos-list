@@ -1,0 +1,170 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-ajax/core-ajax.html">
+<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../paper-input/paper-input-decorator.html">
+<link rel="import" href="../x-audio/x-audio.html">
+<link rel="import" href="../x-trigger-dropdown/x-trigger-dropdown.html">
+<link rel="import" href="../core-dropdown/core-dropdown.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../core-overlay/core-overlay.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+
+<!--
+Element for controls memo
+
+##### Example
+
+    <x-memo-item src="audio.mp3" name="RecordName" memoId="1" reloadList="false" memoService="http://memo-service.com/memo">
+    </x-memo-item>
+
+@element x-memo-item
+@blurb Element for recording audio
+@status alpha
+@homepage https://github.com/tc-team/x-memo-item
+-->
+<polymer-element name="x-memo-item" attributes="name src memoId reloadList memoService">
+    <template>
+       <core-ajax id="ajaxDeleteMemo"
+            auto="false"
+            url="{{memoService}}/{{memoId}}"
+            method="DELETE"
+            handleAs="json"
+            withCredentials="true"
+            on-core-response="{{handleResDelete}}">
+        </core-ajax>
+
+
+        <core-ajax id="ajaxEditMemo"
+            auto="false"
+            url="{{memoService}}/{{memoId}}"
+            method="PUT"
+            params = '{
+                "newName": "{{newName}}"
+            }'
+            handleAs="json"
+            withCredentials="true"
+            on-core-response="{{handleResEdit}}">
+        </core-ajax>
+
+
+        <div relative>
+            <x-audio src="{{src}}" name="{{name}}"></x-audio>
+            
+            <div class="more">
+                <x-trigger-dropdown icon="more-vert">
+                    <core-dropdown halign="right">
+                        <paper-item on-click="{{deleteMemo}}">
+                            <core-icon icon="delete"></core-icon>
+                            Delete
+                        </paper-item>
+                        <paper-item on-click="{{editMemo}}">
+                            <core-icon icon="create"></core-icon>
+                            Edit
+                        </paper-item>
+                    </core-dropdown>
+                </x-trigger-dropdown>
+            </div>
+        </div>
+
+
+        <core-overlay id='deleteDialog' backdrop autoCloseDisabled>
+            <p>Are you sure you want to delete memo <br> "{{name}}"?</p>
+            <div horizontal center-justified layout>
+                <paper-button core-overlay-toggle>No</paper-button>
+                <paper-button on-click="{{executeDelete}}" core-overlay-toggle>Yes</paper-button>
+            </div>
+        </core-overlay>
+
+        <core-overlay id='editDialog' backdrop autoCloseDisabled>
+            <p>
+                <span>Edit memo name: </span>
+                <paper-input-decorator floatingLabel label="{{name}}">
+                    <input id="nameInput" is="core-input" type="text" value="{{newName}}" autofocus></input>
+                </paper-input-decorator>
+            </p>
+            <div horizontal center-justified layout>
+                <paper-button core-overlay-toggle>Cancel</paper-button>
+                <paper-button on-click="{{executeEdit}}" core-overlay-toggle>Save</paper-button>
+            </div>
+        </core-overlay>
+    </template>
+
+    <script>
+        Polymer({
+             /**
+            * The `name` attribute sets memo name
+            *
+            * @attribute name
+            * @type string
+            * @default ''
+            */
+            name: '',
+             /**
+            * The `src` attribute sets source for memo audio
+            *
+            * @attribute src
+            * @type string
+            * @default ''
+            */
+            src: '',
+             /**
+            * The `memoId` attribute sets memo`s id for memo service
+            *
+            * @attribute memoId
+            * @type number
+            * @default 0
+            */
+            memoId: 0,
+            /**
+            * The `memoService` attribute sets URL for memo service, which will save the recorded memo
+            *
+            * @attribute memoService
+            * @type string
+            * @default ''
+            */
+            memoService: '',
+
+            /**
+            * The `reloadList` attribute sets a flag that indicates that need to refresh the memo list.
+            *
+            * @attribute reloadList
+            * @type bool
+            * @default false
+            */
+            reloadList: false,
+
+            ready: function() {
+                this.reloadList = false;
+            },
+            deleteMemo: function () {
+                this.$.deleteDialog.toggle();   
+            },
+            executeDelete: function () {
+                this.$.ajaxDeleteMemo.go();
+            },
+            handleResDelete: function () {
+                this.reloadList = true;
+            },
+            editMemo: function () {
+                this.$.editDialog.toggle(); 
+            },
+            executeEdit: function () {
+                this.$.ajaxEditMemo.go();
+            },
+            handleResEdit: function () {
+                this.reloadList = true;
+            }
+            
+        });
+    </script>
+</polymer-element>
