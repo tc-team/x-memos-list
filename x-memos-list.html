@@ -1,0 +1,80 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-ajax/core-ajax.html">
+<link rel="import" href="../x-memo-item/x-memo-item.html">
+
+<!--
+Element to generate a list of memos
+
+##### Example
+
+    <x-memos-list id="memosList" reloadList="false" memoService="http://memo-service.com/memo"></x-memos-list>
+
+@element x-memos-list
+@blurb Element to generate a list of memos
+@status alpha
+@homepage https://github.com/tc-team/x-memos-list
+-->
+<polymer-element name="x-memos-list" attributes="reloadList memoService">
+    <template>
+        <link rel="stylesheet" href="css/style.css">
+
+        <core-ajax 
+            id="ajax"
+            auto="false"
+            url="{{memoService}}"
+            method="GET"
+            handleAs="json"
+            withCredentials="true"
+            response="{{memos}}">
+        </core-ajax>
+
+        <div layout vertical center>
+            <template repeat="{{memo in memos}}">
+                <x-memo-item src="{{memo.pathToFile}}" name="{{memo.name}}" memoId="{{memo.id}}" reloadList="{{reloadList}}" memoService="{{memoService}}"></x-memo-item>
+            </template>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            /**
+            * The `memoService` attribute sets URL for memo service, which will save the recorded memo
+            *
+            * @attribute memoService
+            * @type string
+            * @default ''
+            */
+            memoService: '',
+
+            /**
+            * The `reloadList` attribute sets a flag that indicates that need to refresh the memo list.
+            *
+            * @attribute reloadList
+            * @type bool
+            * @default false
+            */
+            reloadList: false,
+
+            ready: function () {
+                this.$.ajax.go();
+                this.reloadList = false;
+            },
+            reloadListChanged: function(oldVal, newVal) {
+                if (newVal) {
+                    this.$.ajax.go();
+                    this.reloadList = false;
+                }
+            }
+            
+        });
+    </script>
+</polymer-element>
